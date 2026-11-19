@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1024" />
+  <title>المنافذ الذكية — تطبيق الضابط</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- (no fake status bar — the app sits inside the device's real status bar) -->
+
+    <!-- ============ HOME / DASHBOARD ============ -->
+    <section class="screen is-active" id="screen-home">
+      <div class="scroll home-scroll">
+
+        <div class="home-hero">
+          <div class="hero-photo">
+            <img class="hero-img" src="../assets/welcome_bg.png" alt="دولة الكويت · وزارة الداخلية · المنافذ الذكية" />
+            <span class="hero-fade"></span>
+          </div>
+          <div class="hero-content">
+            <h2 class="hh-title">المنافذ الذكية</h2>
+            <div class="hh-sub">تطبيق الضابط · مراجعة الطلبات</div>
+            <div class="officer-chip">
+              <span class="avatar">ف.ع</span>
+              <div><b>الرائد فيصل العتيبي</b><span> · شارة 4471</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet">
+          <!-- KPIs -->
+          <div class="stats">
+            <div class="stat glass"><div class="n" id="kpi-total">0</div><div class="l">إجمالي الطلبات</div></div>
+            <div class="stat glass"><div class="n red" id="kpi-high">0</div><div class="l">مخاطر عالية</div></div>
+            <div class="stat glass"><div class="n amber" id="kpi-inv">0</div><div class="l">محوّلة للتحقيق</div></div>
+          </div>
+
+          <!-- search -->
+          <div class="search-block glass">
+            <div class="search-row">
+              <span class="search-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+              <input type="text" id="search-name" placeholder="ابحث بالاسم…" autocomplete="off" />
+            </div>
+            <div class="search-row">
+              <span class="search-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l1.6-4.6A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.4L19 13M4.5 13h15v4h-15z"/><circle cx="8" cy="17" r="1.3"/><circle cx="16" cy="17" r="1.3"/></svg></span>
+              <input type="text" id="search-plate" placeholder="ابحث برقم المركبة…" autocomplete="off" />
+              <button class="scan-btn" id="scan-plate" type="button" aria-label="مسح اللوحة">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M4 12h16"/></svg>
+                <span>مسح اللوحة</span>
+              </button>
+            </div>
+            <div class="scan-hintbar" id="scan-hint" hidden>📷 جارٍ محاكاة مسح لوحة المركبة…</div>
+          </div>
+
+          <div class="sec-h"><h3>أحدث الطلبات</h3><a data-tab="screen-applicants">عرض الكل</a></div>
+          <div class="tasklist" id="home-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPLICANTS (all people who applied) ============ -->
+    <section class="screen" id="screen-applicants">
+      <div class="scroll">
+        <div class="page-h"><h1>الطلبات</h1><p>جميع الأشخاص الذين قدّموا التصريح</p></div>
+        <div class="search-row glass solo-search">
+          <span class="search-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+          <input type="text" id="search-all" placeholder="ابحث بالاسم أو رقم المركبة…" autocomplete="off" />
+        </div>
+        <div class="filters" id="app-filters">
+          <button class="fchip is-active" data-filter="all">الكل</button>
+          <button class="fchip" data-filter="High">مخاطر عالية</button>
+          <button class="fchip" data-filter="Medium">متوسطة</button>
+          <button class="fchip" data-filter="Low">منخفضة</button>
+          <button class="fchip" data-filter="investigator">قيد التحقيق</button>
+        </div>
+        <div class="tasklist" id="applicant-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ APPLICANT DETAIL (rendered by JS) ============ -->
+    <section class="screen" id="screen-detail">
+      <div class="detail-bar">
+        <button class="back-btn" data-tab="screen-applicants" aria-label="رجوع">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <h2 id="detail-title">الطلب</h2>
+      </div>
+      <div class="scroll" id="detail-body" style="padding-top:14px;"></div>
+    </section>
+
+    <!-- ============ PROFILE ============ -->
+    <section class="screen" id="screen-profile">
+      <div class="scroll">
+        <div class="page-h"><h1>الملف الشخصي</h1></div>
+        <div class="profile-card glass">
+          <span class="avatar">ف.ع</span>
+          <h2>الرائد فيصل العتيبي</h2>
+          <div class="role">ضابط مراقبة المنفذ · شارة 4471 · وردية أ</div>
+          <div class="profile-stats">
+            <div><div class="n" id="prof-cleared">0</div><div class="l">تمت المراجعة</div></div>
+            <div><div class="n" id="prof-inv">0</div><div class="l">محوّل للتحقيق</div></div>
+            <div><div class="n" id="prof-rej">0</div><div class="l">مرفوض</div></div>
+          </div>
+        </div>
+        <div class="settings glass">
+          <div class="set-row"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2.3-1.3L13.6 2h-3.2l-.4 2.5A7 7 0 0 0 7.7 5.8l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 5.3 12c0 .4 0 .9.1 1.3l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2.3 1.3l.4 2.5h3.2l.4-2.5a7 7 0 0 0 2.3-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span><span class="st">إعدادات المحقّق</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+          <div class="set-row"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg></span><span class="st">الصلاحيات والوصول</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+          <div class="set-row" id="reset-demo"><span class="sic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#28354f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span><span class="st">إعادة تعيين البيانات التجريبية</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TAB BAR ============ -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab is-active" data-tab="screen-home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        الرئيسية
+      </button>
+      <button class="tab" data-tab="screen-applicants">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="3.2"/><circle cx="12" cy="12" r="9"/></svg>
+        الطلبات
+      </button>
+      <button class="tab" data-tab="screen-profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+        الملف
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
